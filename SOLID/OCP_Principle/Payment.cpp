@@ -42,14 +42,55 @@ public:
   }
 };
 
+// create a factory method to centralize object creation
+class PaymentFactory
+{
+public:
+  virtual const PaymentStrategy *create() const = 0;
+  ~PaymentFactory() {};
+};
+
+// factory subclasses
+class PaytmFactory : public PaymentFactory
+{
+public:
+  const PaymentStrategy *create() const override
+  {
+    return new Paytm();
+  }
+};
+
+// Gpay subclass
+class GpayFactory : public PaymentFactory
+{
+public:
+  const PaymentStrategy *create() const override
+  {
+    return new Gpay();
+  }
+};
+
+// cash factory
+class CashFactory : public PaymentFactory
+{
+public:
+  const PaymentStrategy *create() const override
+  {
+    return new Cash();
+  }
+};
+
 int main()
 {
-  PaymentStrategy *ps = new Paytm();
-  ps->pay(200);
+  PaymentFactory *pf1 = new PaytmFactory();
+  const PaymentStrategy *ps1 = pf1->create();
+  ps1->pay(200);
 
-  PaymentStrategy *ps2 = new Cash();
+  PaymentFactory *pf2 = new CashFactory();
+  const PaymentStrategy *ps2 = pf2->create();
   ps2->pay(1000);
 
-  delete ps;
+  delete ps1;
+  delete pf1;
   delete ps2;
 }
