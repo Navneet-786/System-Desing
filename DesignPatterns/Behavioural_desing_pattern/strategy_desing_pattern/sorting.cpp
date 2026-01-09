@@ -6,6 +6,7 @@ class SortingStrategy
 {
 public:
   virtual void sort(vector<int> &vec) = 0;
+  virtual ~SortingStrategy() = default;
 };
 
 // concrete strategies
@@ -17,7 +18,7 @@ public:
   {
     for (int i = 0; i < vec.size(); i++)
     {
-      for (int j = 0; j <= vec.size() - 1; j++)
+      for (int j = 0; j < vec.size() - 1; j++)
       {
         if (i != j && vec[j] > vec[j + 1])
         {
@@ -52,19 +53,15 @@ public:
 // create a context
 class SortingContext
 {
-  SortingStrategy *strategy;
+  unique_ptr<SortingStrategy> strategy;
 
 public:
-  SortingContext()
-  {
-    // by default bubble sorting
-    this->strategy = new BubbleSorting();
-  }
+  SortingContext(unique_ptr<SortingStrategy> s) : strategy(move(s)) {};
 
   // set strategy
-  void setStrategy(SortingStrategy &str)
+  void setStrategy(unique_ptr<SortingStrategy> s)
   {
-    this->strategy = &str;
+    strategy = move(s);
   }
 
   void sort(vector<int> &vec)
@@ -73,18 +70,13 @@ public:
     this->strategy->sort(vec);
     cout << "Sorting Done " << endl;
   }
-
-  ~SortingContext()
-  {
-    delete strategy;
-  }
 };
 
 int main()
 {
-  SortingContext *sctx = new SortingContext();
+  SortingContext sctx(make_unique<BubbleSorting>());
   vector<int> vec = {8, 6, 3, 9, 7};
-  sctx->sort(vec);
+  sctx.sort(vec);
 
   // print
   for (auto it : vec)
@@ -95,15 +87,14 @@ int main()
 
   // change the startegy
   vector<int> vec1 = {8, 7, 6, 5, 4, 3, 2, 1};
-  SelectionSorting s;
-  sctx->setStrategy(s);
-  sctx->sort(vec1);
 
-    // print
+  sctx.setStrategy(make_unique<SelectionSorting>());
+  sctx.sort(vec1);
+
+  // print
   for (auto it : vec1)
   {
     cout << it << " ";
   }
   cout << endl;
-  delete sctx;
 }
