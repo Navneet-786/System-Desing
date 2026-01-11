@@ -9,6 +9,7 @@ public:
   virtual ~PaymentStrategy() = default;
 };
 
+//concrete strategies
 // paytm
 class Paytm : public PaymentStrategy
 {
