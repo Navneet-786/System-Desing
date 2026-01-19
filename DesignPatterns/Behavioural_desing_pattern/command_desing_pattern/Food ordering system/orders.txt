@@ -1,0 +1,14 @@
+[Log] : Basic Pizza is created + Garlic  + onions  + Corn || price: 125.000000
+
+
+[Log] : basic burgur
+ Tomato
+|| price: 45.000000
+
+
+[Log] : Basic Pizza is created + Garlic  + onions  + Corn || price: 125.000000
+
+
+[Log] : basic burgur  Tomato || price: 45.000000
+
+
